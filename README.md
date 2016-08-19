@@ -1,8 +1,6 @@
 # HasBlobBitField
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/has_blob_bit_field`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A Rails extension to treat a binary column (blob) as a sequence of `true`/`false` flags (bits)
 
 ## Installation
 
@@ -20,9 +18,39 @@ Or install it yourself as:
 
     $ gem install has_blob_bit_field
 
-## Usage
+## Example Usage
 
-TODO: Write usage instructions here
+```
+# Migration:
+def change
+	add_column :whatevers, :many_flags_blob, :binary
+end
+
+# Model:
+
+class YourModel < ActiveRecord::Base
+	has_blob_field :many_flags
+end
+
+# Usage:
+
+o = YourModel.new
+o.many_flags.size # => 0
+o.many_flags.size = 666 # Can be as big as 8 times the binary limit of your column
+o.many_flags[42] # => false
+o.many_flags[42] = true
+o.many_flags[700] # => IndexError
+```
+
+## Notes:
+
+* The convention is that your column has the same name as your accessing method with a `'_blob'` suffix, but you can specify the column to use when calling `has_blob_field`.
+
+* The first flag is stored using the highest bit of the first byte.
+
+* The size is always rounded up to a multiple of 8.
+
+* Accessing out of bounds indices raises an `IndexError`, but code could be adapted easily to return `nil` instead.
 
 ## Development
 
@@ -32,7 +60,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/has_blob_bit_field.
+Bug reports and pull requests are welcome on GitHub at https://github.com/marcandre/has_blob_bit_field.
 
 
 ## License

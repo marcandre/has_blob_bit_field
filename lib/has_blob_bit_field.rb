@@ -1,5 +1,8 @@
-require "has_blob_bit_field/version"
+require "active_model"
+require_relative "has_blob_bit_field/version"
+require_relative "has_blob_bit_field/accessor"
+require_relative "has_blob_bit_field/extension"
 
 module HasBlobBitField
-  # Your code goes here...
+  ActiveModel::Dirty.include HasBlobBitField::Extension
 end
