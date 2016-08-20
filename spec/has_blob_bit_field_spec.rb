@@ -2,7 +2,7 @@ require 'spec_helper'
 
 class TestModel
   include ActiveModel::Dirty
-  define_attribute_methods :test_flags_blob
+  define_attribute_methods [:test_flags_blob]
   attr_accessor :test_flags_blob
   has_blob_bit_field :test_flags
 end

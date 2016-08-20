@@ -52,6 +52,8 @@ o.many_flags[700] # => IndexError
 
 * Accessing out of bounds indices raises an `IndexError`, but code could be adapted easily to return `nil` instead.
 
+* Targets: Ruby 2.0+, Rails 3.0+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

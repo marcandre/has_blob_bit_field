@@ -4,7 +4,7 @@ module HasBlobBitField
   module Extension
     extend ActiveSupport::Concern
 
-    class_methods do
+    module ClassMethods
       def has_blob_bit_field field, column: :"#{field}_blob"
         class_eval <<-EVAL, __FILE__, __LINE__
           def #{field}
