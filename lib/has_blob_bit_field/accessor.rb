@@ -39,7 +39,7 @@ module HasBlobBitField
         if s.size > size_in_bytes
           s[size_in_bytes..s.size] = ''
         else
-          s << Array.new(size_in_bytes - s.size, 0).pack('C*')
+          s << "\0".b * (size_in_bytes - s.size)
         end
       end
       size_in_bits
