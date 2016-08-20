@@ -55,6 +55,21 @@ module HasBlobBitField
         ''.b
     end
 
+    def replace(values)
+      new_raw_value = if values.class == self.class
+        values.raw_value
+      else
+        masks = (0..7).map {|i| flag(i) }
+        self.size = values.size
+        values.each_slice(8).map do |flags|
+          flags.each_with_index.inject(0) do |sum, (flag, bit_number)|
+            sum | (flag ? masks[bit_number] : 0)
+          end
+        end.pack('C*')
+      end
+      replace_raw_value new_raw_value
+      self
+    end
 
   protected
     def notify_of_mutation

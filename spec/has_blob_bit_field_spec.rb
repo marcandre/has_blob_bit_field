@@ -98,6 +98,25 @@ describe HasBlobBitField do
       end
     end
 
+    context "when replaced" do
+      context "with an array of booleans" do
+        before {  instance.test_flags = [false, true, true, true,
+                                         false, false, false, false,
+                                         false, true] }
+        its(:raw_value) { should == "\x70\x40".b }
+        its(:record) { should be_changed }
+      end
+
+      context "with another accessors" do
+        let(:other) { TestModel.new }
+        before do
+          other.test_flags_blob = "Hello".b
+          instance.test_flags = other.test_flags
+        end
+        its(:raw_value) { should == "Hello".b }
+        its(:record) { should be_changed }
+      end
+    end
   end
 
 end

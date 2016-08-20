@@ -11,8 +11,8 @@ module HasBlobBitField
             @_#{field}_accessor ||= Accessor.new self, :#{column}
           end
 
-          def #{field}=
-            raise "Don't set the pseudo field #{field} directly, use []= on it"
+          def #{field}=(values)
+            #{field}.replace(values)
           end
         EVAL
       end
