@@ -89,6 +89,13 @@ describe HasBlobBitField do
         expect { subject[-1] = false }.to raise_error IndexError
         expect { subject[24] = false }.to raise_error IndexError
       end
+
+      it "should raise when given another value than true/false" do
+        subject[23] = true # no problem here
+        [0, nil, :false, 'f'].each do |bad_value|
+          expect { subject[1] = bad_value }.to raise_error TypeError
+        end
+      end
     end
 
   end

@@ -15,7 +15,7 @@ module HasBlobBitField
 
     def []=(bit_index, set)
       bit_index = check_index(bit_index)
-      set = !!set # force to true/false
+      set = coerce_to_bool(set)
       val = byte(bit_index)
       mask = flag(bit_index)
       if (val & mask != 0) != set
@@ -67,6 +67,11 @@ module HasBlobBitField
 
     def byte(bit_index)
       raw_value.getbyte(bit_index >> 3) || out_of_bound(bit_index)
+    end
+
+    def coerce_to_bool(value)
+      raise TypeError unless value == true || value == false
+      value
     end
 
     def check_index(bit_index)
