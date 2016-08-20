@@ -51,7 +51,7 @@ module HasBlobBitField
 
     def raw_value(init_nil: false)
       @record.public_send(@column) ||
-        (init_nil && notify_of_mutation && @record.public_send(:"#{@column}=", ''.b)) ||
+        (init_nil && replace_raw_value(''.b)) ||
         ''.b
     end
 
@@ -60,6 +60,11 @@ module HasBlobBitField
     def notify_of_mutation
       @record.public_send :"#{@column}_will_change!"
       self
+    end
+
+    def replace_raw_value(raw)
+      notify_of_mutation
+      @record.public_send(:"#{@column}=", raw)
     end
 
     def flag(bit_index)
