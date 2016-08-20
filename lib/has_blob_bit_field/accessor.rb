@@ -18,7 +18,8 @@ module HasBlobBitField
       set = coerce_to_bool(set)
       val = byte(bit_index)
       mask = flag(bit_index)
-      if (val & mask != 0) != set
+      was_set = val & mask != 0
+      if was_set != set
         notify_of_mutation
         raw_value.setbyte(bit_index >> 3, val ^ mask)
       end
