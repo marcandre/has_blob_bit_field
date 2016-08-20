@@ -7,20 +7,20 @@ module HasBlobBitField
       @column = column
     end
 
-    def [](index)
-      index = check_index(index)
-      val = byte(index)
-      val & flag(index) != 0
+    def [](bit_index)
+      bit_index = check_index(bit_index)
+      val = byte(bit_index)
+      val & flag(bit_index) != 0
     end
 
-    def []=(index, set)
-      index = check_index(index)
+    def []=(bit_index, set)
+      bit_index = check_index(bit_index)
       set = !!set # force to true/false
-      val = byte(index)
-      mask = flag(index)
+      val = byte(bit_index)
+      mask = flag(bit_index)
       if (val & mask != 0) != set
         notify_of_mutation
-        raw_value.setbyte(index >> 3, val ^ mask)
+        raw_value.setbyte(bit_index >> 3, val ^ mask)
       end
       set
     end
@@ -61,21 +61,21 @@ module HasBlobBitField
       self
     end
 
-    def flag(index)
-      0b1000_0000 >> (index & 0b111)
+    def flag(bit_index)
+      0b1000_0000 >> (bit_index & 0b111)
     end
 
-    def byte(index)
-      raw_value.getbyte(index >> 3) || out_of_bound(index)
+    def byte(bit_index)
+      raw_value.getbyte(bit_index >> 3) || out_of_bound(bit_index)
     end
 
-    def check_index(index)
-      out_of_bound(index) if index < 0
-      index
+    def check_index(bit_index)
+      out_of_bound(bit_index) if bit_index < 0
+      bit_index
     end
 
-    def out_of_bound(index)
-      raise IndexError, "#{index} is our of range for #{@column} which has size #{size}. Record: #{@record.inspect}}"
+    def out_of_bound(bit_index)
+      raise IndexError, "#{bit_index} is our of range for #{@column} which has size #{size}. Record: #{@record.inspect}}"
     end
   end
 end
