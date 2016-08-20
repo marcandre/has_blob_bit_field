@@ -2,6 +2,38 @@
 
 A Rails extension to treat a binary column (blob) as a sequence of `true`/`false` flags (bits)
 
+## Example Usage
+
+```
+# Migration:
+def change
+	add_column :whatevers, :many_flags_blob, :binary
+end
+
+# Model:
+class YourModel < ActiveRecord::Base
+	has_blob_field :many_flags
+end
+
+# Usage:
+o = YourModel.new
+o.many_flags.size # => 0
+o.many_flags.size = 666 # Can be as big as 8 times the binary limit of your column
+o.many_flags[42] # => false
+o.many_flags[42] = true
+o.many_flags[700] # => IndexError
+```
+
+## Notes:
+
+* The convention is that your column has the same name as your accessing method with a `'_blob'` suffix, but you can specify the column to use when calling `has_blob_field`.
+
+* The blob is views as an array of bits, so the first flag is stored using the highest bit of the first byte.
+
+* The size is always rounded up to a multiple of 8.
+
+* Targets: Ruby 2.0+, Rails 3.0+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -17,42 +49,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install has_blob_bit_field
-
-## Example Usage
-
-```
-# Migration:
-def change
-	add_column :whatevers, :many_flags_blob, :binary
-end
-
-# Model:
-
-class YourModel < ActiveRecord::Base
-	has_blob_field :many_flags
-end
-
-# Usage:
-
-o = YourModel.new
-o.many_flags.size # => 0
-o.many_flags.size = 666 # Can be as big as 8 times the binary limit of your column
-o.many_flags[42] # => false
-o.many_flags[42] = true
-o.many_flags[700] # => IndexError
-```
-
-## Notes:
-
-* The convention is that your column has the same name as your accessing method with a `'_blob'` suffix, but you can specify the column to use when calling `has_blob_field`.
-
-* The first flag is stored using the highest bit of the first byte.
-
-* The size is always rounded up to a multiple of 8.
-
-* Accessing out of bounds indices raises an `IndexError`, but code could be adapted easily to return `nil` instead.
-
-* Targets: Ruby 2.0+, Rails 3.0+
 
 ## Development
 
