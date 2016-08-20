@@ -8,11 +8,13 @@ module HasBlobBitField
     end
 
     def [](index)
+      index = check_index(index)
       val = byte(index)
       val & flag(index) != 0
     end
 
     def []=(index, set)
+      index = check_index(index)
       set = !!set # force to true/false
       val = byte(index)
       mask = flag(index)
@@ -53,7 +55,7 @@ module HasBlobBitField
     end
 
 
-  private
+  protected
     def notify_of_mutation
       @record.public_send :"#{@column}_will_change!"
       self
@@ -64,8 +66,12 @@ module HasBlobBitField
     end
 
     def byte(index)
-      out_of_bound(index) unless index >= 0
       raw_value.getbyte(index >> 3) || out_of_bound(index)
+    end
+
+    def check_index(index)
+      out_of_bound(index) if index < 0
+      index
     end
 
     def out_of_bound(index)
