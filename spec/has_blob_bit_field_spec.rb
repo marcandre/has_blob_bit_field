@@ -117,6 +117,18 @@ describe HasBlobBitField do
         its(:record) { should be_changed }
       end
     end
+
+    context "when enumerated" do
+      its(:each) { should be_a Enumerator }
+
+      it "should yield true/false for each element" do
+        subject.each.to_a.should == [
+          false, false, false, true,   false, false, true,  false,
+          false, false, true,  true,   false, true,  false, false,
+          false, true,  false, true,   false, true,  true,  false,
+        ]
+      end
+    end
   end
 
 end

@@ -1,5 +1,6 @@
 module HasBlobBitField
   class Accessor
+    include Enumerable
     attr_reader :record, :column
 
     def initialize record, column
@@ -68,6 +69,17 @@ module HasBlobBitField
         end.pack('C*')
       end
       replace_raw_value new_raw_value
+      self
+    end
+
+    def each
+      return to_enum unless block_given?
+      masks = (0..7).map {|i| flag(i) }
+      raw_value.each_byte do |byte|
+        masks.each do |mask|
+          yield mask & byte != 0
+        end
+      end
       self
     end
 
