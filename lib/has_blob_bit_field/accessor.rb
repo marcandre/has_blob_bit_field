@@ -1,6 +1,7 @@
 module HasBlobBitField
   class Accessor
     include Enumerable
+    include Comparable
     attr_reader :record, :column
 
     def initialize record, column
@@ -86,6 +87,11 @@ module HasBlobBitField
     def map!
       return to_enum unless block_given?
       replace(map {|b| yield b })
+    end
+
+    def <=>(other)
+      value_method = other.class == self.class ? :raw_value : :to_a
+      public_send(value_method) <=> other.public_send(value_method)
     end
 
   protected

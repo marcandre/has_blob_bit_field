@@ -30,6 +30,11 @@ describe HasBlobBitField do
   end
 
   context "when blob has data" do
+    let(:initial_flags) { [
+          false, false, false, true,   false, false, true,  false,
+          false, false, true,  true,   false, true,  false, false,
+          false, true,  false, true,   false, true,  true,  false,
+        ]}
     before { instance.test_flags_blob = "\x12\x34\x56".b }
     its(:length) { should == 24 }
 
@@ -122,11 +127,7 @@ describe HasBlobBitField do
       its(:each) { should be_a Enumerator }
 
       it "should yield true/false for each element" do
-        subject.each.to_a.should == [
-          false, false, false, true,   false, false, true,  false,
-          false, false, true,  true,   false, true,  false, false,
-          false, true,  false, true,   false, true,  true,  false,
-        ]
+        subject.each.to_a.should == initial_flags
       end
     end
 
@@ -134,6 +135,28 @@ describe HasBlobBitField do
       its(:map!) { should be_a Enumerator }
       before { subject.map!{ |b| !b } }
       its(:raw_value) { should == "\xED\xCB\xA9".b }
+    end
+
+    context "when compared" do
+      context "with an array of booleans" do
+        it { should == initial_flags }
+        it { should_not == [] }
+        it { should_not == initial_flags.reverse }
+      end
+
+      context "with another accessor" do
+        let(:other) { TestModel.new }
+        it { should_not == other.test_flags }
+        it "should not match with different value" do
+          other.test_flags_blob = "Hello".b
+          subject.should_not == other.test_flags
+        end
+
+        it "should match with the same value" do
+          other.test_flags_blob = "\x12\x34\x56".b
+          subject.should == other.test_flags
+        end
+      end
     end
 
   end
