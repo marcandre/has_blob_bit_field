@@ -129,6 +129,13 @@ describe HasBlobBitField do
         ]
       end
     end
+
+    context "when calling map!" do
+      its(:map!) { should be_a Enumerator }
+      before { subject.map!{ |b| !b } }
+      its(:raw_value) { should == "\xED\xCB\xA9".b }
+    end
+
   end
 
 end

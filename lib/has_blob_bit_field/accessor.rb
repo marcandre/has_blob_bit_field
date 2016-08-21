@@ -83,6 +83,11 @@ module HasBlobBitField
       self
     end
 
+    def map!
+      return to_enum unless block_given?
+      replace(map {|b| yield b })
+    end
+
   protected
     def notify_of_mutation
       @record.public_send :"#{@column}_will_change!"
