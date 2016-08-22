@@ -22,13 +22,18 @@ o.many_flags.size = 666 # Can be as big as 8 times the binary limit of your colu
 o.many_flags[42] # => false
 o.many_flags[42] = true
 o.many_flags[700] # => IndexError
+o.many_flags.count{|f| f} # => 1
+o.many_flags = [false, true, true, false, false, false, false, true]
+o.many_flags.map! {|f| !f}
+o.many_flags == [true, false, false, true, true, true, true, false] # => true
+o.many_flags_blob_changed? # => true
 ```
 
 ## Notes:
 
 * The convention is that your column has the same name as your accessing method with a `'_blob'` suffix, but you can specify the column to use when calling `has_blob_field`.
 
-* The blob is views as an array of bits, so the first flag is stored using the highest bit of the first byte.
+* The blob is viewed as an array of bits where the first flag is stored using the highest bit of the first byte.
 
 * The size is always rounded up to a multiple of 8.
 
