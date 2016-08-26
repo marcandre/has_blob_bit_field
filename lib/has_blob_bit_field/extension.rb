@@ -1,8 +1,8 @@
-require 'active_support'
-
 module HasBlobBitField
   module Extension
-    extend ActiveSupport::Concern
+    def self.included(base)
+      base.extend ClassMethods
+    end
 
     module ClassMethods
       def has_blob_bit_field field, column: :"#{field}_blob"
