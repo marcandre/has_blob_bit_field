@@ -114,7 +114,7 @@ module HasBlobBitField
     end
 
     def coerce_to_bool(value)
-      raise TypeError if value != true && value != false
+      raise TypeError if true != value && false != value
       value
     end
 
