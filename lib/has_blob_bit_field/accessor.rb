@@ -90,7 +90,7 @@ module HasBlobBitField
     end
 
     def <=>(other)
-      value_method = other.class == self.class ? :raw_value : :to_a
+      value_method = (other.class == self.class ? :raw_value : :to_a)
       public_send(value_method) <=> other.public_send(value_method)
     end
 
